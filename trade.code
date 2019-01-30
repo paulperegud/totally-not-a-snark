@@ -2,23 +2,21 @@ import "LIBSNARK/sha256packed"
 
 def main(field[2] hashn, field[2] hashn1, private field[2] staten, private field sender, private field receiver, private field amount, private field balance) -> (field):
 // def main(private field[2] staten, private field sender, private field amount) -> (field):
-   field retvalue = 1
-
    // check the correctness of first hash
    h0, h1 = sha256packed(staten[0], staten[1], 0, 0)
-   retvalue = if h0 == hashn[0] then retvalue else 0 fi
-   retvalue = if h1 == hashn[1] then retvalue else 0 fi
+   h0 == hashn[0]
+   h1 == hashn[1]
 
-   retvalue = if amount + balance == staten[sender] then retvalue else 0 fi
+   amount + balance == staten[sender]
    staten[sender] = staten[sender] - amount
    staten[receiver] = staten[receiver] + amount
 
    // check the correctness of n1 hash
    h0, h1 = sha256packed(staten[0], staten[1], 0, 0)
-   retvalue = if h0 == hashn1[0] then retvalue else 0 fi
-   retvalue = if h1 == hashn1[1] then retvalue else 0 fi
+   h0 == hashn1[0]
+   h1 == hashn1[1]
 
-   return retvalue
+   return 1
    
 // N; initial state : has of "alice has 3 coin"
 // tx: alice sends bob 1
