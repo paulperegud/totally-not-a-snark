@@ -1,6 +1,6 @@
 import "LIBSNARK/sha256packed"
 
-def main(field[2] hashn, field[2] hashn1, private field[2] staten, private field[2] staten1, private field sender, private field receiver, private field amount) -> (field):
+def main(field[2] hashn, field[2] hashn1, private field[2] staten, private field sender, private field receiver, private field amount) -> (field):
 // def main(private field[2] staten, private field sender, private field amount) -> (field):
    field retvalue = 1
 
@@ -9,18 +9,14 @@ def main(field[2] hashn, field[2] hashn1, private field[2] staten, private field
    retvalue = if h0 == hashn[0] then retvalue else 0 fi
    retvalue = if h1 == hashn[1] then retvalue else 0 fi
 
-   // check the correctness of n1 hash
-   h0, h1 = sha256packed(staten1[0], staten1[1], 0, 0)
-   retvalue = if h0 == hashn1[0] then retvalue else 0 fi
-   retvalue = if h1 == hashn1[1] then retvalue else 0 fi
-
    retvalue = if amount < staten[sender] || amount == staten[sender] then retvalue else 0 fi
    staten[sender] = staten[sender] - amount
    staten[receiver] = staten[receiver] + amount
 
-   for field i in 0..2 do
-        retvalue = if staten[i] == staten1[i] then retvalue else 0 fi
-   endfor
+   // check the correctness of n1 hash
+   h0, h1 = sha256packed(staten[0], staten[1], 0, 0)
+   retvalue = if h0 == hashn1[0] then retvalue else 0 fi
+   retvalue = if h1 == hashn1[1] then retvalue else 0 fi
 
    return retvalue
    
